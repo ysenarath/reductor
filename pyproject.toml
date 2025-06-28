@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "reductor"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = []
+authors = [
+    { name = "Yasas Senarath", email = "12231659+ysenarath@users.noreply.github.com" },
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+    "datasets>=3.6.0",
+    "numpy>=2.2.6",
+    "pandas>=2.3.0",
+    "sentence-transformers>=4.1.0",
+    "smolagents>=1.19.0",
+    "torch>=2.7.1",
+    "transformers>=4.53.0",
+]
+
+[project.urls]
+Documentation = "https://github.com/ysenarath/reductor#readme"
+Issues = "https://github.com/ysenarath/reductor/issues"
+Source = "https://github.com/ysenarath/reductor"
+
+[tool.hatch.version]
+path = "src/reductor/__init__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = ["mypy>=1.0.0"]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/reductor tests}"
+
+[tool.coverage.run]
+source_pkgs = ["reductor", "tests"]
+branch = true
+parallel = true
+omit = []
+
+[tool.coverage.paths]
+reductor = ["src/reductor", "*/reductor/src/reductor"]
+tests = ["tests", "*/reductor/tests"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.1",
+]
