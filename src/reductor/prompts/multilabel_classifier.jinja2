@@ -1,0 +1,17 @@
+{%- set instruction = instruction or "Classify the input into one or more of the categories below." %}
+{%- set classes = classes or [] %}
+{%- set input_text = input_text or "" %}
+
+{{- instruction }}
+
+Categories:
+{% for class_ in classes -%}
+- {{ class_ }}
+{% endfor %}
+
+Input:
+"""
+{{ input_text }}
+"""
+
+Respond with one or more category names that apply, separated by commas.

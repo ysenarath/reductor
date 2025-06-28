@@ -1,0 +1,16 @@
+{%- set instruction = instruction or "Classify the following input into one of two categories." %}
+{%- set classes = classes or ["Yes", "No"] %}
+{%- set input_text = input_text or "" %}
+
+{{- instruction }}
+
+Categories:
+- {{ classes[0] }}
+- {{ classes[1] }}
+
+Input:
+"""
+{{ input_text }}
+"""
+
+Respond only with "{{ classes[0] }}" or "{{ classes[1] }}".

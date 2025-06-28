@@ -1,0 +1,25 @@
+{%- set instruction = instruction or "Tag each word in the input text using the BOI format for named entities." %}
+{%- set classes = classes or ["PERSON", "ORG", "LOC", "DATE", "MONEY"] %}
+{%- set input_text = input_text or "" %}
+
+{{ instruction }}
+
+Use the following entity types:
+{% for class_ in classes -%}
+- {{ class_ }}
+{% endfor %}
+
+Use the BOI tagging scheme:
+- B-XXX: Beginning of an entity of type XXX  
+- I-XXX: Inside an entity of type XXX  
+- O: Outside any entity
+
+Input:
+"""
+{{ input_text }}
+"""
+
+Output Format:
+Token<TAB>Tag
+
+Respond with one token per line.

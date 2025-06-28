@@ -1,0 +1,17 @@
+{%- set instruction = instruction or "Classify the following input into one of the given categories." %}
+{%- set classes = classes or [] %}
+{%- set input_text = input_text or "" %}
+
+{{- instruction }}
+
+Categories:
+{% for class_ in classes -%}
+- {{ class_ }}
+{% endfor %}
+
+Input:
+"""
+{{ input_text }}
+"""
+
+Respond only with the category name.
