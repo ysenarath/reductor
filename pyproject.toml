@@ -61,4 +61,5 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 [dependency-groups]
 dev = [
     "ruff>=0.12.1",
+    "twine>=6.1.0",
 ]
