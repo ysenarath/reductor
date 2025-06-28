@@ -27,7 +27,7 @@ dependencies = [
     "numpy>=2.2.6",
     "pandas>=2.3.0",
     "sentence-transformers>=4.1.0",
-    "smolagents>=1.19.0",
+    "smolagents[openai,transformers]>=1.19.0",
     "torch>=2.7.1",
     "transformers>=4.53.0",
 ]
