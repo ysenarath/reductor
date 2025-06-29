@@ -17,6 +17,19 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Task:
+    """
+    Task dataclass representing a classification or tagging task.
+
+    Attributes
+    ----------
+    input_text : str
+        The input text to be processed for the task.
+    classes : list of str, optional
+        A list of class labels relevant to the task. Defaults to None.
+    target_type : {'multiclass_classifier', 'multilabel_classifier', 'binary_classifier', 'boi_tagger'}
+        The type of task to be performed. Defaults to 'multiclass_classifier'.
+    """
+
     input_text: str
     classes: list[str] | None = None
     target_type: Literal[
