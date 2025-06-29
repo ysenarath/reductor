@@ -146,6 +146,17 @@ class LlamaCppModel(Model):
         else:
             raise ValueError("must provide either model_path or repo_id+filename")
 
+    def __del__(self):
+        """
+        Destructor to clean up the Llama model instance.
+        This ensures that resources are released when the model instance is no longer needed.
+        """
+        try:
+            # Workaround for llama-cpp-python issue: https://github.com/abetlen/llama-cpp-python/issues/2002
+            self.llm.close()
+        except Exception:
+            pass
+
     def generate(
         self,
         messages: list[ChatMessage],
