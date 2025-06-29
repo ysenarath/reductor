@@ -5,7 +5,7 @@ from typing import Callable
 import numpy as np
 from smolagents import ToolCallingAgent
 
-from reductor.agents import Task, TaskFinalAnswerTool, TaskPromptTemplate
+from reductor.agents.base import Task, TaskFinalAnswerTool, TaskPromptTemplate
 from reductor.agents.models import Model, model_factory
 
 __all__ = [
