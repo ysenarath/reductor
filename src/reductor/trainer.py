@@ -22,14 +22,18 @@ except ModuleNotFoundError:
 logger = get_logger(__name__)
 
 
-def get_device(device: Any = None) -> Any:
+def get_device(device: Any = None, return_type: str = "pt") -> Any:
     if device is None:
         if torch.cuda.is_available():
-            return "cuda"
+            device = "cuda"
         elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
-            return "mps"
+            device = "mps"
         else:
-            return "cpu"
+            device = "cpu"
+    if return_type == "pt" and isinstance(device, str):
+        device = torch.device(device)
+    elif return_type == "str" and isinstance(device, torch.device):
+        device = device.type
     return device
 
 
