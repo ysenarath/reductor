@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+from typing import Callable
+
 import numpy as np
 from smolagents import ToolCallingAgent
 
 from reductor.agents import Task, TaskFinalAnswerTool, TaskPromptTemplate
-from reductor.agents.models import LlamaCppModel
+from reductor.agents.models import Model, model_factory
+
+__all__ = [
+    "ClassifierAgent",
+]
 
 
 class ClassifierAgent:
@@ -16,26 +22,23 @@ class ClassifierAgent:
         temperature: float | None = None,
         seed: int | None = None,
         device: str | None = None,
+        model: Callable[[], Model] | dict | None = None,
     ) -> None:
-        # self.model = OpenAIModel(
-        #     model_id="meta-llama/llama-3.2-1b-instruct",
-        #     api_base="https://openrouter.ai/api/v1",
-        #     api_key=os.environ["OPENROUTER_API_KEY"],
-        #     temperature=temperature or 1.0,
-        #     seed=seed,
-        # )
-        # self.model = TransformersModel(
-        #     model_id="watt-ai/watt-tool-8B",
-        #     temperature=temperature or 1.0,
-        #     seed=seed,
-        #     device_map=get_device(device),
-        # )
-        self.model = LlamaCppModel(
-            filename="gemma-3-12b-it-q4_0.gguf",
-            repo_id="google/gemma-3-12b-it-qat-q4_0-gguf",
-            temperature=temperature or 1.0,
-            seed=seed,
-        )
+        if isinstance(model, dict):
+            model = model_factory(**model)
+        elif callable(model):
+            self.model = model()
+        else:
+            self.model = model_factory(
+                "llama_cpp",
+                kwargs=dict(
+                    filename="gemma-3-12b-it-q4_0.gguf",
+                    repo_id="google/gemma-3-12b-it-qat-q4_0-gguf",
+                    temperature=temperature or 1.0,
+                    seed=seed,
+                    device=device,
+                ),
+            )
         self.classes = classes
         self.max_steps = max_steps
         if target_type is None:
