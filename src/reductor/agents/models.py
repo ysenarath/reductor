@@ -1,3 +1,8 @@
+"""This module provides a factory function to create model instances based on the specified client.
+It supports LlamaCppModel, OpenAIModel, and TransformersModel.
+It also includes a utility function to parse tool arguments in chat messages.
+"""
+
 import torch
 from smolagents.models import (
     ChatMessage,
@@ -28,6 +33,22 @@ logger = get_logger(__name__)
 
 
 def parse_tool_args_if_needed(message: ChatMessage) -> ChatMessage:
+    """
+    Parses the arguments of tool calls in a chat message if they are in JSON format.
+
+    This function iterates over all tool calls in the provided `ChatMessage` object
+    and applies `parse_json_if_needed` to the `arguments` of each tool call's function.
+
+    Parameters
+    ----------
+    message : ChatMessage
+        The chat message containing tool calls with potential JSON arguments.
+
+    Returns
+    -------
+    ChatMessage
+        The updated chat message with parsed tool call arguments.
+    """
     for tool_call in message.tool_calls:
         tool_call.function.arguments = parse_json_if_needed(
             tool_call.function.arguments
@@ -36,6 +57,53 @@ def parse_tool_args_if_needed(message: ChatMessage) -> ChatMessage:
 
 
 class LlamaCppModel(Model):
+    """
+    A model wrapper for interacting with the `llama-cpp-python` library, enabling
+    text generation and chat completion functionalities. This class supports
+    loading models either from a local path or from a repository.
+
+    Parameters
+    ----------
+    model_path : str or None, optional
+        Path to the local model file. Required if `repo_id` and `filename` are not provided.
+    repo_id : str or None, optional
+        Repository ID for downloading the model. Required if `model_path` is not provided.
+    filename : str or None, optional
+        Filename of the model within the repository. Required if `repo_id` is provided.
+    device : str or torch.device or None, optional
+        Device to run the model on. Defaults to CPU if not specified.
+    n_ctx : int, optional
+        Context window size for the model. Default is 8192.
+    max_tokens : int, optional
+        Maximum number of tokens to generate. Default is 1024.
+    temperature : float, optional
+        Sampling temperature for generation. Default is 0.2.
+    seed : int or None, optional
+        Random seed for reproducibility. Default is None.
+    **kwargs : dict
+        Additional keyword arguments passed to the underlying `llama-cpp-python` library.
+
+    Raises
+    ------
+    ImportError
+        If the `llama-cpp-python` library is not installed.
+    ValueError
+        If neither `model_path` nor `repo_id`+`filename` are provided.
+
+    Methods
+    -------
+    generate(messages, stop_sequences=None, grammar=None, tools_to_call_from=None, **kwargs)
+        Generates a response from the llama.cpp model based on the provided messages
+        and optional parameters. Integrates tool usage if tools are provided.
+
+    Notes
+    -----
+    - The `generate` method supports additional features such as stop sequences, grammar
+      constraints, and tool integration for advanced use cases.
+    - The model can be loaded either from a local path or a repository, providing flexibility
+      in deployment.
+    """
+
     def __init__(
         self,
         model_path: str | None = None,
@@ -86,9 +154,6 @@ class LlamaCppModel(Model):
         tools_to_call_from: list[Tool] | None = None,
         **kwargs,
     ) -> ChatMessage:
-        """
-        Generates a response from the llama.cpp model and integrates tool usage *only if tools are provided*.
-        """
         try:
             generation_kwargs = self._prepare_completion_kwargs(
                 messages=messages,
@@ -186,6 +251,29 @@ class LlamaCppModel(Model):
 
 
 def model_factory(client: str, kwargs: dict | None = None):
+    """
+    Factory function to create and return a model instance based on the specified client.
+
+    Parameters
+    ----------
+    client : str
+        The name of the client for which the model is to be created.
+        Supported values are "llama_cpp", "openai", and others defaulting to TransformersModel.
+    kwargs : dict, optional
+        Additional keyword arguments to be passed to the model constructor.
+        Defaults to an empty dictionary if not provided.
+
+    Returns
+    -------
+    object
+        An instance of the model corresponding to the specified client.
+
+    Notes
+    -----
+    - If `client` is "llama_cpp", an instance of `LlamaCppModel` is returned.
+    - If `client` is "openai", an instance of `OpenAIModel` is returned.
+    - For any other value of `client`, an instance of `TransformersModel` is returned.
+    """
     if kwargs is None:
         kwargs = {}
     if client == "llama_cpp":
