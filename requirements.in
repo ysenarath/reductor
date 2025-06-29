@@ -1,0 +1,12 @@
+datasets
+evaluate
+llama-cpp-python
+nltk
+numpy
+pandas
+sentence-transformers
+smolagents[gradio,openai,transformers]
+torch
+torchvision
+transformers
+textkit-learn

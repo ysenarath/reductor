@@ -26,13 +26,15 @@ dependencies = [
     "datasets>=3.6.0",
     "evaluate>=0.4.4",
     "llama-cpp-python>=0.3.9",
-    "numpy>=2.2.6",
+    "nltk>=3.9.1",
+    "numpy>=1.26.4",
     "pandas>=2.3.0",
-    "sentence-transformers>=4.1.0",
+    "sentence-transformers>=3.4.1",
     "smolagents[gradio,openai,transformers]>=1.19.0",
-    "torch>=2.7.1",
-    "torchvision>=0.22.1",
-    "transformers>=4.53.0",
+    "textkit-learn>=0.4.0",
+    "torch>=2.3.1",
+    "torchvision>=0.18.1",
+    "transformers>=4.45.2",
 ]
 
 [project.urls]
@@ -63,3 +65,9 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [dependency-groups]
 dev = ["ruff>=0.12.1", "twine>=6.1.0"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["tklearn"]
+
+[tool.uv.sources]
+textkit-learn = { git = "https://github.com/ysenarath/textkit-learn" }
