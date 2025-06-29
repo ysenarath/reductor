@@ -3,7 +3,9 @@ from smolagents.models import (
     ChatMessage,
     MessageRole,
     Model,
+    OpenAIModel,
     TokenUsage,
+    TransformersModel,
     parse_json_if_needed,
     remove_stop_sequences,
 )
@@ -165,3 +167,29 @@ class LlamaCppModel(Model):
         except Exception as e:
             logger.error(f"Model error: {e}")
             return ChatMessage(role="assistant", content=f"Error: {str(e)}")
+
+
+# model = OpenAIModel(
+#     model_id="meta-llama/llama-3.2-1b-instruct",
+#     api_base="https://openrouter.ai/api/v1",
+#     api_key=os.environ["OPENROUTER_API_KEY"],
+#     temperature=temperature or 1.0,
+#     seed=seed,
+# )
+
+# model = TransformersModel(
+#     model_id="watt-ai/watt-tool-8B",
+#     temperature=temperature or 1.0,
+#     seed=seed,
+#     device_map=get_device(device),
+# )
+
+
+def model_factory(client: str, kwargs: dict | None = None):
+    if kwargs is None:
+        kwargs = {}
+    if client == "llama_cpp":
+        return LlamaCppModel(**kwargs)
+    elif client == "openai":
+        return OpenAIModel(**kwargs)
+    return TransformersModel(**kwargs)
