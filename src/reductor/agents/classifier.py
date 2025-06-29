@@ -6,7 +6,7 @@ from smolagents import OpenAIModel, ToolCallingAgent
 from reductor.agents import Task, TaskFinalAnswerTool, TaskPromptTemplate
 
 
-class Classifier:
+class LLMClassifier:
     def __init__(
         self,
         target_type: str = "binary_classifier",
