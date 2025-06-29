@@ -43,4 +43,7 @@ agent = ToolCallingAgent(
     max_steps=max_steps,
 )
 
-agent.run("What is the capital of France?")
+agent.run("""Search wikipedia for best matching meaning for the term in brackets in the text.
+
+Text:
+(Apple) is the best company that produces smarter phones.""")
