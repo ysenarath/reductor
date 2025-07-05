@@ -28,7 +28,7 @@ class FinalAnswerTool(Tool):
     name = "final_answer"
     description = "Tool to select the final answer for and validate if the selected candidate is valid."
     inputs = {
-        "answer": {"type": "int", "description": "The final answer to the problem"}
+        "answer": {"type": "integer", "description": "The final answer to the problem"}
     }
     output_type = "any"
 
