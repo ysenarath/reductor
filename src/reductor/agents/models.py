@@ -114,6 +114,7 @@ class LlamaCppModel(Model):
         max_tokens: int = 1024,
         temperature: float = 0.2,
         seed: int | None = None,
+        verbose: bool = False,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -131,7 +132,8 @@ class LlamaCppModel(Model):
                 n_gpu_layers=n_gpu_layers,
                 n_ctx=n_ctx,
                 max_tokens=max_tokens,
-                verbose=False,
+                verbose=verbose,
+                **kwargs,
             )
         elif repo_id and filename:
             self.llm = Llama.from_pretrained(
@@ -140,7 +142,7 @@ class LlamaCppModel(Model):
                 n_gpu_layers=n_gpu_layers,
                 n_ctx=n_ctx,
                 max_tokens=max_tokens,
-                verbose=False,
+                verbose=verbose,
                 **kwargs,
             )
         else:
